@@ -4,6 +4,7 @@ export interface GitHubUser {
   blog: string | null;
   company: string | null;
   created_at: string;
+  email: string;
   followers: number;
   following: number;
   location: string | null;
