@@ -1,15 +1,7 @@
 import { useReducer, useState, useEffect, useRef, useMemo } from "react";
-import type { GitHubRepo } from "../interfaces/GithubRepo";
-import axios from "axios";
-
 import { reducer, initialState } from "./useInfiniteRepos/reducer";
 import type { StarSort } from "./useInfiniteRepos/actions";
-
-const API_URL = import.meta.env.VITE_API_URL as string;
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN as string;
-const PER_PAGE = 5;
-
-const headers = GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {};
+import { fetchRepos } from "../utils/fetchRepos";
 
 export function useInfiniteRepos(username: string) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -24,48 +16,12 @@ export function useInfiniteRepos(username: string) {
   useEffect(() => {
     const controller = new AbortController();
 
-    const fetchRepos = async () => {
-      loadingRef.current = true;
-      dispatch({ type: "fetch_start" });
+    fetchRepos(
+      { username, page: state.page, starSort, signal: controller.signal },
+      dispatch,
+      loadingRef,
+    );
 
-      try {
-        const order = starSort === "asc" ? "asc" : "desc";
-
-        const { data } = await axios.get<{ items: GitHubRepo[] }>(
-          `${API_URL}/search/repositories?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${state.page}`,
-          { signal: controller.signal, headers },
-        );
-
-        dispatch({
-          type: "fetch_success",
-          payload: {
-            items: data.items,
-            hasMore: data.items.length === PER_PAGE,
-          },
-        });
-      } catch (err) {
-        if (axios.isCancel(err)) return;
-
-        let errorMessage = "Erro ao carregar repositórios. Tente novamente.";
-
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 429) {
-            errorMessage =
-              "Limite de requisições atingido. Tente novamente em breve.";
-          } else if (err.response?.status === 403) {
-            errorMessage = "Acesso negado pela API do GitHub.";
-          }
-        }
-
-        dispatch({ type: "fetch_error", payload: errorMessage });
-      } finally {
-        if (!controller.signal.aborted) {
-          loadingRef.current = false;
-        }
-      }
-    };
-
-    fetchRepos();
     return () => controller.abort();
   }, [username, state.page, starSort]);
 
