@@ -1,23 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import BackButton from "../BackButton";
 import type { GitHubUser } from "../../interfaces/GithubUser";
 
 export default function UserProfile(user: GitHubUser) {
   const navigate = useNavigate();
 
-  const goToHome = () => navigate("/", { replace: true });
-
   return (
     <div className="card border-0 shadow-sm mb-4">
       <div className="card-body text-center p-4">
         <div className="d-flex justify-content-start mb-2">
-          <button
-            className="btn btn-sm btn-outline-dark"
-            aria-label="Voltar para a página inicial"
-            onClick={goToHome}
-          >
-            <i className="bi bi-arrow-left me-1" aria-hidden="true" />
-            Voltar
-          </button>
+          <BackButton
+            onClick={() => navigate("/", { replace: true })}
+            label="Voltar para a página inicial"
+          />
         </div>
         <img
           src={user.avatar_url}
