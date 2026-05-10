@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function Home() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
 
   const reset = () => {
@@ -17,6 +18,8 @@ export default function Home() {
   const searchUser = (formData: FormData) => {
     const query = formData.get("search") as string;
 
+    setLoading(true);
+
     axios
       .get(`${import.meta.env.VITE_API_URL}/users/${query}`)
       .then((res) => {
@@ -24,7 +27,8 @@ export default function Home() {
       })
       .catch((e) => {
         setError(getGithubErrorMessage(e));
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -51,9 +55,16 @@ export default function Home() {
                   type="submit"
                   className="btn btn-dark px-4"
                   role="button"
-                  disabled={!query.trim()}
+                  disabled={!query.trim() || loading}
                 >
-                  <i className="bi bi-search" />
+                  {loading ? (
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                    />
+                  ) : (
+                    <i className="bi bi-search" />
+                  )}
                 </button>
               </div>
             </form>
