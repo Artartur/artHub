@@ -1,18 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import type { GitHubRepo } from "../../interfaces/GithubRepo";
 
-export default function RepoCard({
-  description,
-  html_url,
-  language,
-  name,
-  stargazers_count,
-}: GitHubRepo) {
+export default function RepoCard(repo: GitHubRepo) {
+  const navigate = useNavigate();
+  const { description, language, name, stargazers_count } = repo;
+
   return (
-    <a
+    <div
       className="card repo-card border-0 shadow-sm text-decoration-none"
-      href={html_url}
-      target="_blank"
-      rel="noreferrer"
+      onClick={() => navigate("/repo", { state: { repo } })}
+      style={{ cursor: "pointer" }}
     >
       <div className="card-body p-4">
         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -34,6 +31,6 @@ export default function RepoCard({
           )}
         </div>
       </div>
-    </a>
+    </div>
   );
 }
