@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./screens/Home";
 import User from "./screens/User";
 import Repo from "./screens/Repo";
+import NotFound from "./screens/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/repo",
     element: <Repo />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
