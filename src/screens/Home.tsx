@@ -18,12 +18,12 @@ export default function Home() {
     setQuery("");
   };
 
-  const searchUser = (formData: FormData) => {
+  const searchUser = async (formData: FormData) => {
     const query = formData.get("search") as string;
 
     setLoading(true);
 
-    axios
+    await axios
       .get(`${import.meta.env.VITE_API_URL}/users/${query}`)
       .then((res) => {
         navigate(`/user`, { state: { user: res.data } });

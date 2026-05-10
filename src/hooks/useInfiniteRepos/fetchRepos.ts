@@ -1,9 +1,9 @@
 import axios from "axios";
-import type { Dispatch, RefObject } from "react";
-import getGithubErrorMessage from "./githubErrorsResponse";
-import type { GitHubRepo } from "../interfaces/GithubRepo";
-import type { FetchReposParams } from "../interfaces/FetchReposParams";
-import type { Action } from "../hooks/useInfiniteRepos/actions";
+import type { Dispatch } from "react";
+import getGithubErrorMessage from "../../utils/githubErrorsResponse";
+import type { GitHubRepo } from "../../interfaces/GithubRepo";
+import type { FetchReposParams } from "../../interfaces/FetchReposParams";
+import type { Action } from "./actions";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN as string;
@@ -14,11 +14,9 @@ const headers = GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {};
 export async function fetchRepos(
   params: FetchReposParams,
   dispatch: Dispatch<Action>,
-  loadingRef: RefObject<boolean>,
 ) {
   const { username, page, starSort, signal } = params;
 
-  loadingRef.current = true;
   dispatch({ type: "fetch_start" });
 
   try {
@@ -43,9 +41,5 @@ export async function fetchRepos(
       type: "fetch_error",
       payload: getGithubErrorMessage(err as Error),
     });
-  } finally {
-    if (!signal.aborted) {
-      loadingRef.current = false;
-    }
   }
 }

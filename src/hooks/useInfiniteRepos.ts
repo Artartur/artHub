@@ -1,7 +1,7 @@
 import { useReducer, useState, useEffect, useRef, useMemo } from "react";
 import { reducer, initialState } from "./useInfiniteRepos/reducer";
 import type { StarSort } from "./useInfiniteRepos/actions";
-import { fetchRepos } from "../utils/fetchRepos";
+import { fetchRepos } from "./useInfiniteRepos/fetchRepos";
 
 export function useInfiniteRepos(username: string) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -16,11 +16,13 @@ export function useInfiniteRepos(username: string) {
   useEffect(() => {
     const controller = new AbortController();
 
+    loadingRef.current = true;
     fetchRepos(
       { username, page: state.page, starSort, signal: controller.signal },
       dispatch,
-      loadingRef,
-    );
+    ).finally(() => {
+      if (!controller.signal.aborted) loadingRef.current = false;
+    });
 
     return () => controller.abort();
   }, [username, state.page, starSort]);
