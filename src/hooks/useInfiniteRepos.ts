@@ -1,4 +1,4 @@
-import { useReducer, useState, useEffect, useRef, useMemo } from "react";
+import { useReducer, useState, useEffect, useRef } from "react";
 import { reducer, initialState } from "./useInfiniteRepos/reducer";
 import type { StarSort } from "./useInfiniteRepos/actions";
 import { fetchRepos } from "./useInfiniteRepos/fetchRepos";
@@ -44,18 +44,8 @@ export function useInfiniteRepos(username: string) {
     return () => observer.disconnect();
   }, [state.hasMore]);
 
-  const sortedRepos = useMemo(
-    () =>
-      [...state.repos].sort((a, b) =>
-        starSort === "asc"
-          ? a.stargazers_count - b.stargazers_count
-          : b.stargazers_count - a.stargazers_count,
-      ),
-    [state.repos, starSort],
-  );
-
   return {
-    repos: sortedRepos,
+    repos: state.repos,
     loading: state.loading,
     hasMore: state.hasMore,
     error: state.error,
