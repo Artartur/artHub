@@ -4,14 +4,23 @@ import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
 import RepoSortFilter from "../components/user/RepoSortFilter";
 import Loading from "../components/Loading";
+import Toast from "../components/Toast";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
 
 export default function User() {
   const { state } = useLocation();
   const user = state?.user;
 
-  const { repos, loading, hasMore, sentinelRef, starSort, setStarSort } =
-    useInfiniteRepos(user?.login ?? "");
+  const {
+    error,
+    hasMore,
+    loading,
+    repos,
+    sentinelRef,
+    setError,
+    setStarSort,
+    starSort,
+  } = useInfiniteRepos(user?.login ?? "");
 
   if (!user) return <Navigate to="/" replace />;
 
@@ -42,6 +51,12 @@ export default function User() {
           </div>
         </div>
       </div>
+
+      <Toast
+        message={error ?? ""}
+        show={!!error}
+        onClose={() => setError(null)}
+      />
     </main>
   );
 }
