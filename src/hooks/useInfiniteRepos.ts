@@ -2,7 +2,11 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import type { GitHubRepo } from "../interfaces/GithubRepo";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL as string;
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN as string;
 const PER_PAGE = 5;
+
+const headers = GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {};
 
 export type StarSort = "asc" | "desc" | null;
 
@@ -11,6 +15,7 @@ export function useInfiniteRepos(username: string) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [starSort, setStarSort] = useState<StarSort>("desc");
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
@@ -19,6 +24,7 @@ export function useInfiniteRepos(username: string) {
     setRepos([]);
     setPage(1);
     setHasMore(true);
+    setError(null);
   }, [username, starSort]);
 
   useEffect(() => {
@@ -32,8 +38,8 @@ export function useInfiniteRepos(username: string) {
         const order = starSort === "asc" ? "asc" : "desc";
 
         const { data } = await axios.get<{ items: GitHubRepo[] }>(
-          `https://api.github.com/search/repositories?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${page}`,
-          { signal: controller.signal },
+          `${API_URL}/search/repositories?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${page}`,
+          { signal: controller.signal, headers },
         );
 
         setRepos((prev) => {
@@ -43,10 +49,25 @@ export function useInfiniteRepos(username: string) {
 
         setHasMore(data.items.length === PER_PAGE);
       } catch (err) {
-        if ((err as Error).name !== "AbortError") throw err;
+        if (axios.isCancel(err)) return;
+
+        if (axios.isAxiosError(err)) {
+          if (err.response?.status === 429) {
+            setError(
+              "Limite de requisições atingido. Tente novamente em breve.",
+            );
+          } else if (err.response?.status === 403) {
+            setError("Acesso negado pela API do GitHub.");
+          } else {
+            setError("Erro ao carregar repositórios. Tente novamente.");
+          }
+        }
+
+        setHasMore(false);
       } finally {
         if (!controller.signal.aborted) {
           loadingRef.current = false;
+
           setLoading(false);
         }
       }
@@ -87,6 +108,8 @@ export function useInfiniteRepos(username: string) {
     repos: sortedRepos,
     loading,
     hasMore,
+    error,
+    setError,
     sentinelRef,
     starSort,
     setStarSort,
