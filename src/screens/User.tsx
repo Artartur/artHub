@@ -6,6 +6,7 @@ import RepoCardSkeleton from "../components/user/RepoCardSkeleton";
 import RepoSortFilter from "../components/user/RepoSortFilter";
 import Toast from "../components/Toast";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function User() {
   const { state } = useLocation();
@@ -21,6 +22,8 @@ export default function User() {
     setStarSort,
     starSort,
   } = useInfiniteRepos(user?.login ?? "");
+
+  usePageTitle(user?.name ?? "");
 
   if (!user) return <Navigate to="/" replace />;
 
@@ -51,7 +54,9 @@ export default function User() {
             {!loading && !hasMore && repos.length === 0 && (
               <div className="text-center py-5 text-muted">
                 <i className="bi bi-folder-x fs-1 d-block mb-2" />
-                <p className="mb-0">Este usuário não possui repositórios públicos.</p>
+                <p className="mb-0">
+                  Este usuário não possui repositórios públicos.
+                </p>
               </div>
             )}
 

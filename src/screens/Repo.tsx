@@ -1,9 +1,12 @@
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Repo() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const repo = state?.repo;
+
+  usePageTitle(repo?.name ?? "");
 
   if (!repo) return <Navigate to="/" replace />;
 

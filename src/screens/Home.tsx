@@ -3,12 +3,15 @@ import { useState } from "react";
 import Toast from "../components/Toast";
 import getGithubErrorMessage from "../utils/githubErrorsReponse";
 import { useNavigate } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Home() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+
+  usePageTitle("");
 
   const reset = () => {
     setError("");
