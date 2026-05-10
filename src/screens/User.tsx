@@ -48,6 +48,13 @@ export default function User() {
               </div>
             )}
 
+            {!loading && !hasMore && repos.length === 0 && (
+              <div className="text-center py-5 text-muted">
+                <i className="bi bi-folder-x fs-1 d-block mb-2" />
+                <p className="mb-0">Este usuário não possui repositórios públicos.</p>
+              </div>
+            )}
+
             <div ref={sentinelRef} className="py-2 text-center">
               {!hasMore && repos.length > 0 && (
                 <p className="text-muted small mb-0">
