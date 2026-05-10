@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "./screens/Home";
 import User from "./screens/User";
 import Repo from "./screens/Repo";
@@ -11,6 +11,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
+    element: <Navigate to="/" replace />,
+  },
+  {
+    path: "/user/:username",
     element: <User />,
   },
   {

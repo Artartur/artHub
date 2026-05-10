@@ -1,4 +1,5 @@
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, useParams, Navigate } from "react-router-dom";
+
 import UserProfile from "../components/user/UserProfile";
 import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
@@ -7,10 +8,12 @@ import RepoSortFilter from "../components/user/RepoSortFilter";
 import Toast from "../components/Toast";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { useUser } from "../hooks/useUser";
+import UserSkeleton from "../components/user/UserSkeleton";
 
 export default function User() {
   const { state } = useLocation();
-  const user = state?.user;
+  const { username } = useParams<{ username: string }>();
 
   const {
     error,
@@ -21,11 +24,19 @@ export default function User() {
     setError,
     setStarSort,
     starSort,
-  } = useInfiniteRepos(user?.login ?? "");
+  } = useInfiniteRepos(username ?? "");
+
+  const {
+    user,
+    loading: loadingUser,
+    error: userError,
+  } = useUser(username, state?.user);
 
   usePageTitle(user?.name ?? "");
 
-  if (!user) return <Navigate to="/" replace />;
+  if (loadingUser) return <UserSkeleton />;
+
+  if (userError || !user) return <Navigate to="/" replace />;
 
   return (
     <main className="min-vh-100 bg-light py-5">

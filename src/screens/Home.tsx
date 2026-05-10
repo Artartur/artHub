@@ -26,7 +26,7 @@ export default function Home() {
     await axios
       .get(`${import.meta.env.VITE_API_URL}/users/${query}`)
       .then((res) => {
-        navigate(`/user`, { state: { user: res.data } });
+        navigate(`/user/${res.data.login}`, { state: { user: res.data } });
       })
       .catch((e) => {
         setError(getGithubErrorMessage(e));

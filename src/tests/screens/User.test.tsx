@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { useLocation, MemoryRouter } from "react-router-dom";
+import axios from "axios";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
 import User from "../../screens/User";
@@ -12,12 +13,21 @@ const mockNavigate = vi.fn();
 const mockSetError = vi.fn();
 const mockSetStarSort = vi.fn();
 
+vi.mock("axios", async () => {
+  const actual = await vi.importActual<typeof import("axios")>("axios");
+  return {
+    ...actual,
+    default: { ...actual.default, get: vi.fn() },
+  };
+});
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
     useLocation: vi.fn(),
+    useParams: vi.fn(),
     Navigate: ({ to }: { to: string }) => (
       <div data-testid="navigate" data-to={to} />
     ),
@@ -66,10 +76,12 @@ const defaultHookReturn = {
   hasMore: true,
   error: null,
   setError: mockSetError,
-  sentinelRef: { current: null },
+  sentinelRef: vi.fn(),
   starSort: "desc" as StarSort,
   setStarSort: mockSetStarSort,
 };
+
+const { useParams } = await import("react-router-dom");
 
 const renderUser = () =>
   render(
@@ -84,25 +96,32 @@ describe("User", () => {
     vi.mocked(useLocation).mockReturnValue({
       state: { user: mockUser },
       key: "",
-      pathname: "/user",
+      pathname: "/user/artartur",
       search: "",
       hash: "",
     });
+
+    vi.mocked(useParams).mockReturnValue({ username: "artartur" });
+
     vi.mocked(useInfiniteRepos).mockReturnValue(defaultHookReturn);
   });
 
-  it("redirects to home when user state is missing", () => {
+  it("redirects to home when user fetch fails", async () => {
     vi.mocked(useLocation).mockReturnValue({
       state: null,
       key: "",
-      pathname: "/user",
+      pathname: "/user/unknown",
       search: "",
       hash: "",
     });
+    vi.mocked(useParams).mockReturnValue({ username: "unknown" });
+    vi.mocked(axios.get).mockRejectedValueOnce(new Error("Not found"));
 
     renderUser();
 
-    expect(screen.getByTestId("navigate")).toHaveAttribute("data-to", "/");
+    await waitFor(() => {
+      expect(screen.getByTestId("navigate")).toHaveAttribute("data-to", "/");
+    });
   });
 
   it("renders the user name", () => {

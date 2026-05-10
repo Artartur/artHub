@@ -109,7 +109,7 @@ describe("Home", () => {
     );
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/user", {
+      expect(mockNavigate).toHaveBeenCalledWith("/user/artartur", {
         state: { user: mockUser },
       });
     });
