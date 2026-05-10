@@ -2,6 +2,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import UserProfile from "../components/user/UserProfile";
 import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
+import RepoSortFilter from "../components/user/RepoSortFilter";
 import Loading from "../components/Loading";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
 
@@ -22,29 +23,7 @@ export default function User() {
             <UserProfile {...user} />
             <UserInformations {...user} />
 
-            <div className="d-flex align-items-center justify-content-between mb-3">
-              <h2 className="fs-6 fw-bold text-muted text-uppercase mb-0">
-                Repositórios
-              </h2>
-              <div className="btn-group btn-group-sm d-flex align-items-center">
-                <button
-                  className={`btn ${starSort === "desc" ? "btn-dark" : "btn-outline-dark"}`}
-                  onClick={() =>
-                    setStarSort(starSort === "desc" ? null : "desc")
-                  }
-                  title="Mais estrelas primeiro"
-                >
-                  ★ desc
-                </button>
-                <button
-                  className={`btn ${starSort === "asc" ? "btn-dark" : "btn-outline-dark"}`}
-                  onClick={() => setStarSort(starSort === "asc" ? null : "asc")}
-                  title="Menos estrelas primeiro"
-                >
-                  ★ asc
-                </button>
-              </div>
-            </div>
+            <RepoSortFilter starSort={starSort} onSortChange={setStarSort} />
 
             <div className="d-flex flex-column gap-3">
               {repos.map((repo) => (
