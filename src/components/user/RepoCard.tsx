@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import RepoStats from "./RepoStats";
 import type { GitHubRepo } from "../../interfaces/GithubRepo";
 
 export default function RepoCard(repo: GitHubRepo) {
@@ -23,22 +24,7 @@ export default function RepoCard(repo: GitHubRepo) {
 
         {description && <p className="text-muted small mb-3">{description}</p>}
 
-        <div className="d-flex gap-3 text-muted small">
-          <span className="d-flex align-items-center gap-1">
-            <i className="bi bi-star" aria-hidden="true" /> {stargazers_count}
-          </span>
-
-          {language && (
-            <span className="d-flex align-items-center gap-1">
-              <i
-                className="bi bi-circle-fill"
-                style={{ fontSize: "0.6rem" }}
-                aria-hidden="true"
-              />
-              {language}
-            </span>
-          )}
-        </div>
+        <RepoStats stargazers_count={stargazers_count} language={language} />
       </div>
     </div>
   );
