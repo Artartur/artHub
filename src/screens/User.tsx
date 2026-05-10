@@ -2,8 +2,8 @@ import { useLocation, Navigate } from "react-router-dom";
 import UserProfile from "../components/user/UserProfile";
 import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
+import RepoCardSkeleton from "../components/user/RepoCardSkeleton";
 import RepoSortFilter from "../components/user/RepoSortFilter";
-import Loading from "../components/Loading";
 import Toast from "../components/Toast";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
 
@@ -40,8 +40,15 @@ export default function User() {
               ))}
             </div>
 
-            <div ref={sentinelRef} className="py-3 text-center">
-              <Loading loading={loading} />
+            {loading && (
+              <div className="d-flex flex-column gap-3 py-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <RepoCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+
+            <div ref={sentinelRef} className="py-2 text-center">
               {!hasMore && repos.length > 0 && (
                 <p className="text-muted small mb-0">
                   Todos os repositórios carregados.
