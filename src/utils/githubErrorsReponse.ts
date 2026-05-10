@@ -4,6 +4,7 @@ const STATUS_MESSAGES: Record<number, string> = {
   404: "Usuário não encontrado.",
   403: "Limite de requisições atingido. Tente novamente em alguns minutos.",
   422: "Nome de usuário inválido.",
+  429: "Limite de requisições atingido. Tente novamente em breve.",
   503: "Serviço do GitHub indisponível. Tente novamente mais tarde.",
 };
 
