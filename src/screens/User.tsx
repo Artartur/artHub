@@ -4,18 +4,13 @@ import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
 import Loading from "../components/Loading";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
-import { useState } from "react";
 
 export default function User() {
   const { state } = useLocation();
-  const [direction, setDirection] = useState<"asc" | "desc">("desc");
-
   const user = state?.user;
 
-  const { repos, loading, hasMore, sentinelRef } = useInfiniteRepos(
-    user.login,
-    direction,
-  );
+  const { repos, loading, hasMore, sentinelRef, starSort, setStarSort } =
+    useInfiniteRepos(user.login);
 
   return (
     <main className="min-vh-100 bg-light py-5">
@@ -29,22 +24,22 @@ export default function User() {
               <h2 className="fs-6 fw-bold text-muted text-uppercase mb-0">
                 Repositórios
               </h2>
-              <div className="btn-group btn-group-sm" role="group" aria-label="Ordenação">
+              <div className="btn-group btn-group-sm d-flex align-items-center">
                 <button
-                  type="button"
-                  className={`btn ${direction === "desc" ? "btn-dark" : "btn-outline-dark"}`}
-                  onClick={() => setDirection("desc")}
+                  className={`btn ${starSort === "desc" ? "btn-dark" : "btn-outline-dark"}`}
+                  onClick={() =>
+                    setStarSort(starSort === "desc" ? null : "desc")
+                  }
+                  title="Mais estrelas primeiro"
                 >
-                  <i className="bi bi-sort-down me-1" />
-                  Mais estrelas
+                  ★ desc
                 </button>
                 <button
-                  type="button"
-                  className={`btn ${direction === "asc" ? "btn-dark" : "btn-outline-dark"}`}
-                  onClick={() => setDirection("asc")}
+                  className={`btn ${starSort === "asc" ? "btn-dark" : "btn-outline-dark"}`}
+                  onClick={() => setStarSort(starSort === "asc" ? null : "asc")}
+                  title="Menos estrelas primeiro"
                 >
-                  <i className="bi bi-sort-up me-1" />
-                  Menos estrelas
+                  ★ asc
                 </button>
               </div>
             </div>
@@ -57,7 +52,6 @@ export default function User() {
 
             <div ref={sentinelRef} className="py-3 text-center">
               <Loading loading={loading} />
-
               {!hasMore && repos.length > 0 && (
                 <p className="text-muted small mb-0">
                   Todos os repositórios carregados.
