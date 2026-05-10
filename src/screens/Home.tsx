@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
-import Toast from "../components/Toast";
-import getGithubErrorMessage from "../utils/githubErrorsReponse";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
+import Toast from "../components/Toast";
+import getGithubErrorMessage from "../utils/githubErrorsResponse";
 
 export default function Home() {
   const navigate = useNavigate();

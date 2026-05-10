@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Dispatch, RefObject } from "react";
-import getGithubErrorMessage from "./githubErrorsReponse";
+import getGithubErrorMessage from "./githubErrorsResponse";
 import type { GitHubRepo } from "../interfaces/GithubRepo";
 import type { FetchReposParams } from "../interfaces/FetchReposParams";
 import type { Action } from "../hooks/useInfiniteRepos/actions";
