@@ -1,15 +1,11 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import type { GitHubRepo } from "../interfaces/GithubRepo";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 
 export default function Repo() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const repo: GitHubRepo = state?.repo;
+  const repo = state?.repo;
 
-  if (!repo) {
-    navigate("/");
-    return null;
-  }
+  if (!repo) return <Navigate to="/" replace />;
 
   return (
     <main className="min-vh-100 bg-light py-5">
@@ -41,7 +37,10 @@ export default function Repo() {
 
                   {repo.language && (
                     <span className="d-flex align-items-center gap-1">
-                      <i className="bi bi-circle-fill" style={{ fontSize: "0.6rem" }} />
+                      <i
+                        className="bi bi-circle-fill"
+                        style={{ fontSize: "0.6rem" }}
+                      />
                       {repo.language}
                     </span>
                   )}

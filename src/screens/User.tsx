@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import UserProfile from "../components/user/UserProfile";
 import UserInformations from "../components/user/UserInformations";
 import RepoCard from "../components/user/RepoCard";
@@ -10,7 +10,9 @@ export default function User() {
   const user = state?.user;
 
   const { repos, loading, hasMore, sentinelRef, starSort, setStarSort } =
-    useInfiniteRepos(user.login);
+    useInfiniteRepos(user?.login ?? "");
+
+  if (!user) return <Navigate to="/" replace />;
 
   return (
     <main className="min-vh-100 bg-light py-5">
