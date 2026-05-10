@@ -1,5 +1,7 @@
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
+import BackButton from "../components/BackButton";
+import RepoStats from "../components/user/RepoStats";
 
 export default function Repo() {
   const { state } = useLocation();
@@ -15,14 +17,11 @@ export default function Repo() {
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
-            <button
-              className="btn btn-sm btn-outline-dark mb-4"
-              aria-label="Voltar para a listagem de repositórios"
+            <BackButton
               onClick={() => navigate(-1)}
-            >
-              <i className="bi bi-arrow-left me-1" aria-hidden="true" />
-              Voltar
-            </button>
+              label="Voltar para a listagem de repositórios"
+              className="mb-4"
+            />
 
             <div className="card border-0 shadow-sm">
               <div className="card-body p-4">
@@ -32,27 +31,12 @@ export default function Repo() {
                   <p className="text-muted mb-4">{repo.description}</p>
                 )}
 
-                <div className="d-flex gap-4 text-muted small mb-4">
-                  <span className="d-flex align-items-center gap-1">
-                    <i
-                      className="bi bi-star-fill text-warning"
-                      aria-hidden="true"
-                    />
-                    {repo.stargazers_count}{" "}
-                    {repo.stargazers_count === 1 ? "estrela" : "estrelas"}
-                  </span>
-
-                  {repo.language && (
-                    <span className="d-flex align-items-center gap-1">
-                      <i
-                        className="bi bi-circle-fill"
-                        aria-hidden="true"
-                        style={{ fontSize: "0.6rem" }}
-                      />
-                      {repo.language}
-                    </span>
-                  )}
-                </div>
+                <RepoStats
+                  stargazers_count={repo.stargazers_count}
+                  language={repo.language}
+                  showStarLabel
+                  className="mb-4"
+                />
 
                 <a
                   href={repo.html_url}
