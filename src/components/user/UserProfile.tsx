@@ -10,15 +10,19 @@ export default function UserProfile(user: GitHubUser) {
     <div className="card border-0 shadow-sm mb-4">
       <div className="card-body text-center p-4">
         <div className="d-flex justify-content-start mb-2">
-          <button className="btn btn-sm btn-outline-dark" onClick={goToHome}>
-            <i className="bi bi-arrow-left me-1" />
+          <button
+            className="btn btn-sm btn-outline-dark"
+            aria-label="Voltar para a página inicial"
+            onClick={goToHome}
+          >
+            <i className="bi bi-arrow-left me-1" aria-hidden="true" />
             Voltar
           </button>
         </div>
         <img
           src={user.avatar_url}
-          alt="Avatar"
           className="rounded-circle mb-3"
+          alt={`Avatar de ${user.name}`}
           width={120}
           height={120}
         />
@@ -28,6 +32,8 @@ export default function UserProfile(user: GitHubUser) {
             className="text-decoration-none text-black"
             href={`https://github.com/${user.login}`}
             target="_blank"
+            aria-label={`Perfil de ${user.login} no GitHub (abre em nova aba)`}
+            rel="noopener noreferrer"
           >
             @{user.login}
           </a>

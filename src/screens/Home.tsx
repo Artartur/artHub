@@ -54,16 +54,17 @@ export default function Home() {
                 <button
                   type="submit"
                   className="btn btn-dark px-4"
-                  role="button"
+                  aria-label="Buscar usuário"
                   disabled={!query.trim() || loading}
                 >
                   {loading ? (
                     <span
                       className="spinner-border spinner-border-sm"
                       role="status"
+                      aria-label="Carregando..."
                     />
                   ) : (
-                    <i className="bi bi-search" />
+                    <i className="bi bi-search" aria-hidden="true" />
                   )}
                 </button>
               </div>

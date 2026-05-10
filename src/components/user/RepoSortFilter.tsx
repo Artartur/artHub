@@ -12,15 +12,17 @@ export default function RepoSortFilter({
       <div className="btn-group btn-group-sm d-flex align-items-center">
         <button
           className={`btn ${starSort === "desc" ? "btn-dark" : "btn-outline-dark"}`}
+          aria-label="Ordenar por mais estrelas primeiro"
+          aria-pressed={starSort === "desc"}
           onClick={() => onSortChange(starSort === "desc" ? null : "desc")}
-          title="Mais estrelas primeiro"
         >
           ★ desc
         </button>
         <button
           className={`btn ${starSort === "asc" ? "btn-dark" : "btn-outline-dark"}`}
+          aria-label="Ordenar por menos estrelas primeiro"
+          aria-pressed={starSort === "asc"}
           onClick={() => onSortChange(starSort === "asc" ? null : "asc")}
-          title="Menos estrelas primeiro"
         >
           ★ asc
         </button>

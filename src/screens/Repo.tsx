@@ -14,9 +14,10 @@ export default function Repo() {
           <div className="col-12 col-md-8 col-lg-6">
             <button
               className="btn btn-sm btn-outline-dark mb-4"
+              aria-label="Voltar para a listagem de repositórios"
               onClick={() => navigate(-1)}
             >
-              <i className="bi bi-arrow-left me-1" />
+              <i className="bi bi-arrow-left me-1" aria-hidden="true" />
               Voltar
             </button>
 
@@ -30,7 +31,10 @@ export default function Repo() {
 
                 <div className="d-flex gap-4 text-muted small mb-4">
                   <span className="d-flex align-items-center gap-1">
-                    <i className="bi bi-star-fill text-warning" />
+                    <i
+                      className="bi bi-star-fill text-warning"
+                      aria-hidden="true"
+                    />
                     {repo.stargazers_count}{" "}
                     {repo.stargazers_count === 1 ? "estrela" : "estrelas"}
                   </span>
@@ -39,6 +43,7 @@ export default function Repo() {
                     <span className="d-flex align-items-center gap-1">
                       <i
                         className="bi bi-circle-fill"
+                        aria-hidden="true"
                         style={{ fontSize: "0.6rem" }}
                       />
                       {repo.language}
@@ -48,11 +53,12 @@ export default function Repo() {
 
                 <a
                   href={repo.html_url}
-                  target="_blank"
-                  rel="noreferrer"
                   className="btn btn-dark"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Ver ${repo.name} no GitHub (abre em nova aba)`}
                 >
-                  <i className="bi bi-github me-2" />
+                  <i className="bi bi-github me-2" aria-hidden="true" />
                   Ver no GitHub
                 </a>
               </div>

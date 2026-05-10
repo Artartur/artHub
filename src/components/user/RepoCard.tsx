@@ -5,11 +5,16 @@ export default function RepoCard(repo: GitHubRepo) {
   const navigate = useNavigate();
   const { description, language, name, stargazers_count } = repo;
 
+  const goToRepo = () => navigate("/repo", { state: { repo } });
+
   return (
     <div
       className="card repo-card border-0 shadow-sm text-decoration-none"
-      onClick={() => navigate("/repo", { state: { repo } })}
-      style={{ cursor: "pointer" }}
+      aria-label={`Ver detalhes do repositório ${name}`}
+      role="button"
+      tabIndex={0}
+      onClick={goToRepo}
+      onKeyDown={(e) => e.key === "Enter" && goToRepo()}
     >
       <div className="card-body p-4">
         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -20,12 +25,16 @@ export default function RepoCard(repo: GitHubRepo) {
 
         <div className="d-flex gap-3 text-muted small">
           <span className="d-flex align-items-center gap-1">
-            <i className="bi bi-star" /> {stargazers_count}
+            <i className="bi bi-star" aria-hidden="true" /> {stargazers_count}
           </span>
 
           {language && (
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-circle-fill" style={{ fontSize: "0.6rem" }} />
+              <i
+                className="bi bi-circle-fill"
+                style={{ fontSize: "0.6rem" }}
+                aria-hidden="true"
+              />
               {language}
             </span>
           )}
