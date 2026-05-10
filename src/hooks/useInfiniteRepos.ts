@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useReducer, useState, useEffect, useRef, useMemo } from "react";
 import type { GitHubRepo } from "../interfaces/GithubRepo";
 import axios from "axios";
+
+import { reducer, initialState } from "./useInfiniteRepos/reducer";
+import type { StarSort } from "./useInfiniteRepos/actions";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN as string;
@@ -8,23 +11,14 @@ const PER_PAGE = 5;
 
 const headers = GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {};
 
-export type StarSort = "asc" | "desc" | null;
-
 export function useInfiniteRepos(username: string) {
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [starSort, setStarSort] = useState<StarSort>("desc");
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
 
   useEffect(() => {
-    setRepos([]);
-    setPage(1);
-    setHasMore(true);
-    setError(null);
+    dispatch({ type: "reset" });
   }, [username, starSort]);
 
   useEffect(() => {
@@ -32,50 +26,48 @@ export function useInfiniteRepos(username: string) {
 
     const fetchRepos = async () => {
       loadingRef.current = true;
-      setLoading(true);
+      dispatch({ type: "fetch_start" });
 
       try {
         const order = starSort === "asc" ? "asc" : "desc";
 
         const { data } = await axios.get<{ items: GitHubRepo[] }>(
-          `${API_URL}/search/repositories?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${page}`,
+          `${API_URL}/search/repositories?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${state.page}`,
           { signal: controller.signal, headers },
         );
 
-        setRepos((prev) => {
-          const existingIds = new Set(prev.map((r) => r.id));
-          return [...prev, ...data.items.filter((r) => !existingIds.has(r.id))];
+        dispatch({
+          type: "fetch_success",
+          payload: {
+            items: data.items,
+            hasMore: data.items.length === PER_PAGE,
+          },
         });
-
-        setHasMore(data.items.length === PER_PAGE);
       } catch (err) {
         if (axios.isCancel(err)) return;
 
+        let errorMessage = "Erro ao carregar repositórios. Tente novamente.";
+
         if (axios.isAxiosError(err)) {
           if (err.response?.status === 429) {
-            setError(
-              "Limite de requisições atingido. Tente novamente em breve.",
-            );
+            errorMessage =
+              "Limite de requisições atingido. Tente novamente em breve.";
           } else if (err.response?.status === 403) {
-            setError("Acesso negado pela API do GitHub.");
-          } else {
-            setError("Erro ao carregar repositórios. Tente novamente.");
+            errorMessage = "Acesso negado pela API do GitHub.";
           }
         }
 
-        setHasMore(false);
+        dispatch({ type: "fetch_error", payload: errorMessage });
       } finally {
         if (!controller.signal.aborted) {
           loadingRef.current = false;
-
-          setLoading(false);
         }
       }
     };
 
     fetchRepos();
     return () => controller.abort();
-  }, [username, page, starSort]);
+  }, [username, state.page, starSort]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -83,8 +75,8 @@ export function useInfiniteRepos(username: string) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasMore && !loadingRef.current) {
-          setPage((prev) => prev + 1);
+        if (entry.isIntersecting && state.hasMore && !loadingRef.current) {
+          dispatch({ type: "next_page" });
         }
       },
       { threshold: 0.1 },
@@ -92,24 +84,25 @@ export function useInfiniteRepos(username: string) {
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore]);
+  }, [state.hasMore]);
 
   const sortedRepos = useMemo(
     () =>
-      [...repos].sort((a, b) =>
+      [...state.repos].sort((a, b) =>
         starSort === "asc"
           ? a.stargazers_count - b.stargazers_count
           : b.stargazers_count - a.stargazers_count,
       ),
-    [repos, starSort],
+    [state.repos, starSort],
   );
 
   return {
     repos: sortedRepos,
-    loading,
-    hasMore,
-    error,
-    setError,
+    loading: state.loading,
+    hasMore: state.hasMore,
+    error: state.error,
+    setError: (error: string | null) =>
+      dispatch({ type: "set_error", payload: error }),
     sentinelRef,
     starSort,
     setStarSort,

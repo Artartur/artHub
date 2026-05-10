@@ -3,9 +3,10 @@ import { useLocation, MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
 import User from "../../screens/User";
-import { useInfiniteRepos, type StarSort } from "../../hooks/useInfiniteRepos";
+import { useInfiniteRepos } from "../../hooks/useInfiniteRepos";
 import type { GitHubUser } from "../../interfaces/GithubUser";
 import type { GitHubRepo } from "../../interfaces/GithubRepo";
+import type { StarSort } from "../../hooks/useInfiniteRepos/actions";
 
 const mockNavigate = vi.fn();
 const mockSetError = vi.fn();
