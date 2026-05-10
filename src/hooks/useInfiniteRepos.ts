@@ -1,13 +1,17 @@
-import { useReducer, useState, useEffect, useRef } from "react";
+import { useReducer, useState, useEffect, useRef, useCallback } from "react";
 import { reducer, initialState } from "./useInfiniteRepos/reducer";
 import type { StarSort } from "./useInfiniteRepos/actions";
 import { fetchRepos } from "./useInfiniteRepos/fetchRepos";
 
 export function useInfiniteRepos(username: string) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [sentinelEl, setSentinelEl] = useState<HTMLDivElement | null>(null);
   const [starSort, setStarSort] = useState<StarSort>("desc");
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef(false);
+
+  const sentinelRef = useCallback((node: HTMLDivElement | null) => {
+    setSentinelEl(node);
+  }, []);
 
   useEffect(() => {
     dispatch({ type: "reset" });
@@ -28,8 +32,7 @@ export function useInfiniteRepos(username: string) {
   }, [username, state.page, starSort]);
 
   useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
+    if (!sentinelEl) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -40,9 +43,9 @@ export function useInfiniteRepos(username: string) {
       { threshold: 0.1 },
     );
 
-    observer.observe(sentinel);
+    observer.observe(sentinelEl);
     return () => observer.disconnect();
-  }, [state.hasMore]);
+  }, [sentinelEl, state.hasMore]);
 
   return {
     repos: state.repos,
