@@ -79,7 +79,8 @@ describe("Repo", () => {
   it("renders the star count", () => {
     renderRepo();
 
-    expect(screen.getByText(/42 estrelas/i)).toBeInTheDocument();
+    expect(screen.getByText("42")).toBeInTheDocument();
+    expect(screen.getByText("estrelas")).toBeInTheDocument();
   });
 
   it("renders singular estrela when count is 1", () => {
@@ -93,7 +94,8 @@ describe("Repo", () => {
 
     renderRepo();
 
-    expect(screen.getByText(/1 estrela$/i)).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
+    expect(screen.getByText("estrela")).toBeInTheDocument();
   });
 
   it("renders the language", () => {
