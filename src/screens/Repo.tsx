@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { usePageTitle } from "../hooks/usePageTitle";
 import BackButton from "../components/BackButton";
-import RepoStats from "../components/user/RepoStats";
+import RepoStats from "../components/repo/RepoStats";
 
 export default function Repo() {
   const { state } = useLocation();
@@ -32,10 +32,10 @@ export default function Repo() {
                 )}
 
                 <RepoStats
-                  stargazers_count={repo.stargazers_count}
+                  className="mb-4"
                   language={repo.language}
                   showStarLabel
-                  className="mb-4"
+                  stargazers_count={repo.stargazers_count}
                 />
 
                 <a

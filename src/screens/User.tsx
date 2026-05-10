@@ -1,14 +1,14 @@
 import { useLocation, useParams, Navigate } from "react-router-dom";
-
-import UserProfile from "../components/user/UserProfile";
-import UserInformations from "../components/user/UserInformations";
-import RepoCard from "../components/user/RepoCard";
-import RepoCardSkeleton from "../components/user/RepoCardSkeleton";
-import RepoSortFilter from "../components/user/RepoSortFilter";
-import Toast from "../components/Toast";
 import { useInfiniteRepos } from "../hooks/useInfiniteRepos";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { useUser } from "../hooks/useUser";
+
+import UserInformations from "../components/user/UserInformations";
+import UserProfile from "../components/user/UserProfile";
+import RepoCard from "../components/repo/RepoCard";
+import RepoCardSkeleton from "../components/repo/RepoCardSkeleton";
+import RepoSortFilter from "../components/repo/RepoSortFilter";
+import Toast from "../components/Toast";
 import UserSkeleton from "../components/user/UserSkeleton";
 
 export default function User() {

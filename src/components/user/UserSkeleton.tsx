@@ -1,4 +1,4 @@
-import RepoCardSkeleton from "./RepoCardSkeleton";
+import RepoCardSkeleton from "../repo/RepoCardSkeleton";
 
 export default function UserSkeleton() {
   return (
