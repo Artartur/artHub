@@ -19,7 +19,7 @@ export async function fetchRepos(
     const order = starSort === "asc" ? "asc" : "desc";
 
     const { data } = await axios.get<{ items: GitHubRepo[] }>(
-      `api/repos/search?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${page}`,
+      `/api/repos/search?q=user:${username}&sort=stars&order=${order}&per_page=${PER_PAGE}&page=${page}`,
       { signal },
     );
 

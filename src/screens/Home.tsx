@@ -24,7 +24,7 @@ export default function Home() {
     setLoading(true);
 
     await axios
-      .get(`api/users/${query}`)
+      .get(`/api/users/${query}`)
       .then((res) => {
         navigate(`/user/${res.data.login}`, { state: { user: res.data } });
       })
