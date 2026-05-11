@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const API_URL = process.env.VITE_API_URL as string;
+const API_URL = process.env.GITHUB_API_URL as string;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { username } = req.query;
