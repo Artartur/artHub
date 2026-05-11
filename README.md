@@ -80,13 +80,11 @@ This keeps your token server-side only — it is never exposed to the browser.
 
 The following features were implemented beyond what was specified:
 
-- **Infinite scroll** — repositories load progressively as the user scrolls, with `IntersectionObserver` and request cancellation via `AbortController`
-- **Direct URL access** — `/user/:username` can be shared or bookmarked; the app fetches user data from the URL parameter when no router state is available
-- **Skeleton loading** — placeholder UI while user data and repositories are loading
-- **Vercel serverless proxy** — `api/users/:username` and `api/repos/search` proxy requests to GitHub, keeping the token server-side
-- **React Compiler** — experimental compiler enabled via `babel-plugin-react-compiler` for automatic memoization
-- **Unit tests** — screens covered with Vitest and Testing Library
-- **State management with `useReducer`** — `useInfiniteRepos` uses a reducer with extracted `actions`, `reducer`, and `fetchRepos` modules
+- **Infinite scroll**: repositories load progressively as the user scrolls, with `IntersectionObserver` and request cancellation via `AbortController`
+- **Direct URL access**: `/user/:username` can be shared or bookmarked; the app fetches user data from the URL parameter when no router state is available
+- **Skeleton loading**: placeholder UI while user data and repositories are loading
+- **Vercel serverless proxy**: `api/users/:username` and `api/repos/search` proxy requests to GitHub, keeping the token server-side
+- **Unit tests**: screens covered with Vitest and Testing Library
 
 ## Assets
 
