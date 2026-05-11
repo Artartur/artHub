@@ -87,3 +87,19 @@ The following features were implemented beyond what was specified:
 - **React Compiler** — experimental compiler enabled via `babel-plugin-react-compiler` for automatic memoization
 - **Unit tests** — screens covered with Vitest and Testing Library
 - **State management with `useReducer`** — `useInfiniteRepos` uses a reducer with extracted `actions`, `reducer`, and `fetchRepos` modules
+
+## Assets
+
+Home:
+<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/bcb1e545-2f12-4a68-ab57-6eb095b415b4" />
+
+User:
+<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/f1393d5a-70f9-40be-aed1-e34d8fa09e9f" />
+
+Repo:
+<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/c397a1c5-5a97-42c6-8799-bc20b32a3568" />
+
+NotFound:
+<img width="1920" height="964" alt="image" src="https://github.com/user-attachments/assets/265f637a-0f74-40b6-a20f-4344dbeecf1c" />
+
+
