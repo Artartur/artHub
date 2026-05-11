@@ -47,8 +47,14 @@ export function useInfiniteRepos(username: string) {
     return () => observer.disconnect();
   }, [sentinelEl, state.hasMore]);
 
+  const repos = [...state.repos].sort((a, b) =>
+    starSort === "asc"
+      ? a.stargazers_count - b.stargazers_count
+      : b.stargazers_count - a.stargazers_count,
+  );
+
   return {
-    repos: state.repos,
+    repos,
     loading: state.loading,
     hasMore: state.hasMore,
     error: state.error,
