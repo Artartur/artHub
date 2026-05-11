@@ -24,7 +24,7 @@ export default function Home() {
     setLoading(true);
 
     await axios
-      .get(`${import.meta.env.VITE_API_URL}/users/${query}`)
+      .get(`api/users/${query}`)
       .then((res) => {
         navigate(`/user/${res.data.login}`, { state: { user: res.data } });
       })

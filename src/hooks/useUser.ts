@@ -15,7 +15,7 @@ export function useUser(
     if (initialUser || !username) return;
 
     axios
-      .get<GitHubUser>(`${import.meta.env.VITE_API_URL}/users/${username}`)
+      .get<GitHubUser>(`api/users/${username}`)
       .then((res) => setUser(res.data))
       .catch((err) => setError(getGithubErrorMessage(err)))
       .finally(() => setLoading(false));
